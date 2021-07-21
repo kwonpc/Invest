@@ -82,7 +82,7 @@
 - apache-jmeter-5.4.1
 
 ### 빌드 및 실행 방법
-1. Git Repositoires 에 https://github.com/kakaopaycoding-server/202106-kwonpc-nate.com.git 등록 후 Import Projects 로 내려받기
+1. Git Repositoires 에 https://github.com/kwonpc/Invest.git 등록 후 Import Projects 로 내려받기
 2. 내려받은 프로젝트를 Maven 빌드
 3. 설치된 카프카를 아래와 같이 기동해준다
   - bin\windows\zookeeper-server-start.bat config/zookeeper.properties
