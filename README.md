@@ -64,14 +64,15 @@
    
 2. X-USER-ID가 헤더로 넘어온다. 더 있을 다른 API도 이런식으로 넘어온다고 보고 AOP를 써서 공통으로 빼자
 
-3. 전체상품API 와 나의투자상품보기API 는 product 와 invest를 조인해야 할 필요가 생겼는데 JPA entity에서 조인한다해도 count, sum은 구현하기 어렵고 native-qeury를 써야 하는 경우가 많다. 
-   - Formula를 써서 서브쿼리로 간단하게 구현하자, native-query로 쓴다해도 List<Object[]> 타입 재가공은 생각하기도 싫다.
+3. 전체상품API 와 나의투자상품보기API 는 product 와 invest를 entity에서 조인한다해도 count, sum은 구현하기 어려우므로 Formula를 써서 서브쿼리로 구현, native-query로 써서 List<Object[]> 타입 재가공보다는 나을 것 같다.
 
 4. SpringBootTest를 써서 테스트코드를 돌려보는데 테스트가 완료되기 전에 DB커넥션이 종료되고 투자하기 commit이 실패가 난다. 
    - 아무래도 SpringBootTest를 controller 단위로 하기 때문에 KafkaListener로 들어와서 처리되는 부분까지 기다려주지 않는 것 같다. 
    - datasource url 부분에 DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE 를 추가하여 db_close를 지연시키니 해결.
    - 이렇게 해도 테스트코드에서는 controller 들이 먼저 실행, KafkaListener는 나중에 처리된다.  이부분은 시간이 없어서 해결불가, jmeter로 개별 테스트 하는게 확실할것 같다.
 
+5. 카프카를 써서 순서를 부여함으로써 동시성 문제 해결은 했지만 사용자가 늘어나서 scale-out 을 해야 할 경우 서버나 컨테이너는 scale-out 가능하지만 카프카를 클러스터로 사용하고 리스너(컨슈머)를 늘려야 할 경우 순서는 무용지물이 된다.
+   이 부분은 레디스 분산 락을 통해 한번 더 개선해야겠음.  이걸 할때는 왜 못찾았지?
 
 ## 프로젝트 빌드 및 실행 방법
 ### 개발 환경 
